@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Calculator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .calculator {
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            overflow: hidden;
+            width: 250px;
+        }
+        .display {
+            background-color: #333;
+            color: #fff;
+            text-align: right;
+            padding: 20px;
+            font-size: 1.5em;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Three columns for numbers */
+            gap: 1px;
+        }
+        .operator-buttons {
+            display: grid;
+            grid-template-columns: 1fr; /* One column for operators */
+            gap: 1px;
+        }
+        .button {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 20px;
+            font-size: 1.2em;
+            text-align: center;
+            cursor: pointer;
+        }
+        .button.operator {
+            background-color: #f7a700;
+            color: white;
+        }
+        .button.operator:hover {
+            background-color: #e68a00;
+        }
+        .button.double {
+            grid-column: span 2;
+        }
+        .button.double-wide {
+            grid-column: span 3;
+        }
+        .button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <div class="button double-wide" onclick="clearDisplay()">C</div>
+            <div class="button" onclick="appendNumber('7')">7</div>
+            <div class="button" onclick="appendNumber('8')">8</div>
+            <div class="button" onclick="appendNumber('9')">9</div>
+            <div class="button" onclick="appendNumber('4')">4</div>
+            <div class="button" onclick="appendNumber('5')">5</div>
+            <div class="button" onclick="appendNumber('6')">6</div>
+            <div class="button" onclick="appendNumber('1')">1</div>
+            <div class="button" onclick="appendNumber('2')">2</div>
+            <div class="button" onclick="appendNumber('3')">3</div>
+            <div class="button double" onclick="appendNumber('0')">0</div>
+            <div class="button" onclick="appendNumber('.')">.</div>
+        </div>
+        <div class="operator-buttons">
+            <div class="button operator" onclick="setOperator('/')">/</div>
+            <div class="button operator" onclick="setOperator('*')">*</div>
+            <div class="button operator" onclick="setOperator('-')">-</div>
+            <div class="button operator" onclick="setOperator('+')">+</div>
+            <div class="button double" onclick="calculateResult()">=</div>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let currentInput = '';
+        let previousValue = '';
+        let operator = '';
+
+        function appendNumber(number) {
+            if (currentInput === '0') {
+                currentInput = number;
+            } else {
+                currentInput += number;
+            }
+            display.innerText = currentInput;
+        }
+
+        function setOperator(op) {
+            if (currentInput) {
+                if (previousValue && operator) {
+                    calculateResult();
+                } else {
+                    previousValue = currentInput;
+                }
+                operator = op;
+                currentInput = ''; // Reset for new input
+            }
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            previousValue = '';
+            operator = '';
+            display.innerText = '0';
+        }
+
+        function calculateResult() {
+            if (previousValue && currentInput) {
+                let result;
+                switch (operator) {
+                    case '+':
+                        result = parseFloat(previousValue) + parseFloat(currentInput);
+                        break;
+                    case '-':
+                        result = parseFloat(previousValue) - parseFloat(currentInput);
+                        break;
+                    case '*':
+                        result = parseFloat(previousValue) * parseFloat(currentInput);
+                        break;
+                    case '/':
+                        result = parseFloat(previousValue) / parseFloat(currentInput);
+                        break;
+                    default:
+                        return;
+                }
+                display.innerText = result;
+                currentInput = '';
+                previousValue = result; // Allow chaining calculations
+                operator = '';
+            }
+        }
+    </script>
+</body>
+</html>
+
